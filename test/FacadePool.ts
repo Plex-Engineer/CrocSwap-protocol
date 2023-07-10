@@ -175,7 +175,7 @@ export class TestPool {
         this.liqBase = true
         this.initTemplBefore = true
 
-        factory = ethers.getContractFactory("CrocSwapDexSeed")
+        factory = ethers.getContractFactory("CrocSwapDex")
         if (dex) {
             this.dex = Promise.resolve(dex)
         } else {
@@ -200,7 +200,41 @@ export class TestPool {
             { value: BigNumber.from(1000000000).mul(1000000000) } : { }
     }
 
+    async initDex() {
+        const factories = await Promise.all([
+            ethers.getContractFactory("WarmPath"),
+            ethers.getContractFactory("ColdPath"),
+            ethers.getContractFactory("LongPath"),
+            ethers.getContractFactory("MicroPaths"),
+            ethers.getContractFactory("KnockoutFlagPath"),
+            ethers.getContractFactory("KnockoutLiqPath"),
+            ethers.getContractFactory("SafeModePath")
+        ])
+        const [
+            warmPath,
+            coldPath,
+            longPath,
+            microPath,
+            knockoutFlagPath,
+            kockoutLiqPath,
+            safeModePath
+        ] = await Promise.all(factories.map(async (f) => f.connect(await this.auth).deploy()))
+        
+    
+        // upgrade each sidecar
+        await Promise.all([
+          await this.testUpgrade(2, warmPath.address),
+          await this.testUpgrade(3, coldPath.address),
+          await this.testUpgrade(4, longPath.address),
+          await this.testUpgrade(5, microPath.address),
+          await this.testUpgrade(3500, knockoutFlagPath.address),
+          await this.testUpgrade(7, kockoutLiqPath.address),
+          await this.testUpgrade(9999, safeModePath.address),
+        ]);
+    }
+
     async fundTokens (bal: BigNumberish = INIT_BAL) {
+        await this.initDex()
         await this.base.fund(await this.trader, (await this.dex).address, bal)
         await this.quote.fund(await this.trader, (await this.dex).address, bal)
         await this.base.fund(await this.other, (await this.dex).address, bal)
