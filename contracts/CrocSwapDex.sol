@@ -183,7 +183,7 @@ contract CrocSwapDex is HotPath, ICrocMinion {
  *     geth. Useful for testing environments though. */
 contract CrocSwapDexSeed  is CrocSwapDex {
     
-    constructor() {
+    constructor(address _csrTurnstileAdd) CrocSwapDex(_csrTurnstileAdd) {
         proxyPaths_[CrocSlots.LP_PROXY_IDX] = address(new WarmPath());
         proxyPaths_[CrocSlots.COLD_PROXY_IDX] = address(new ColdPath());
         proxyPaths_[CrocSlots.LONG_PROXY_IDX] = address(new LongPath());
