@@ -19,6 +19,7 @@ import './callpaths/LongPath.sol';
 import './callpaths/KnockoutPath.sol';
 import './callpaths/MicroPaths.sol';
 import './callpaths/SafeModePath.sol';
+import './interfaces/ICSRTurnstile.sol';
 
 /* @title CrocSwap exchange contract
  * @notice Top-level CrocSwap contract. Contains all public facing methods and state
@@ -34,12 +35,15 @@ contract CrocSwapDex is HotPath, ICrocMinion {
     using CurveMath for CurveMath.CurveState;
     using Chaining for Chaining.PairFlow;
 
-    constructor() {
+    uint immutable csrID;
+
+    constructor(address _csrTurnstileAdd) {
         // Authority is originally set to deployer address, which can then transfer to
         // proper governance contract (if deployer already isn't)
         authority_ = msg.sender;
         hotPathOpen_ = true;
         proxyPaths_[CrocSlots.BOOT_PROXY_IDX] = address(new BootPath());
+        csrID = ICSRTurnstile(_csrTurnstileAdd).register(address(this));
     }
 
     /* @notice Swaps between two tokens within a single liquidity pool.
