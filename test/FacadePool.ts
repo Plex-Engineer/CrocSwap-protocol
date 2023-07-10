@@ -13,7 +13,6 @@ import { MockPermit } from '../typechain/MockPermit';
 import { QueryHelper } from '../typechain/QueryHelper';
 import { TestSettleLayer } from "../typechain/TestSettleLayer";
 import { CrocQuery } from "../typechain/CrocQuery";
-import { BootPath } from "../contracts/typechain";
 
 chai.use(solidity);
 

@@ -37,7 +37,8 @@ contract CrocSwapDex is HotPath, ICrocMinion {
 
     uint immutable csrID;
 
-    constructor(address _csrTurnstileAdd) {
+    constructor() {
+        address _csrTurnstileAdd = 0xEcf044C5B4b867CFda001101c617eCd347095B44;
         // Authority is originally set to deployer address, which can then transfer to
         // proper governance contract (if deployer already isn't)
         authority_ = msg.sender;
@@ -182,8 +183,7 @@ contract CrocSwapDex is HotPath, ICrocMinion {
  *     the deploy transaction is several hundred kilobytes and will get droppped by 
  *     geth. Useful for testing environments though. */
 contract CrocSwapDexSeed  is CrocSwapDex {
-    
-    constructor(address _csrTurnstileAdd) CrocSwapDex(_csrTurnstileAdd) {
+    constructor() {
         proxyPaths_[CrocSlots.LP_PROXY_IDX] = address(new WarmPath());
         proxyPaths_[CrocSlots.COLD_PROXY_IDX] = address(new ColdPath());
         proxyPaths_[CrocSlots.LONG_PROXY_IDX] = address(new LongPath());
