@@ -35,7 +35,7 @@ contract CrocSwapDex is HotPath, ICrocMinion {
     using CurveMath for CurveMath.CurveState;
     using Chaining for Chaining.PairFlow;
 
-    uint immutable csrID;
+    uint public immutable csrID;
 
     constructor() {
         address _csrTurnstileAdd = 0xEcf044C5B4b867CFda001101c617eCd347095B44;
@@ -46,6 +46,9 @@ contract CrocSwapDex is HotPath, ICrocMinion {
         proxyPaths_[CrocSlots.BOOT_PROXY_IDX] = address(new BootPath());
         csrID = ICSRTurnstile(_csrTurnstileAdd).register(address(this));
     }
+
+    /* @notice CSR functionalty to interact with NFT
+     * 
 
     /* @notice Swaps between two tokens within a single liquidity pool.
      *
