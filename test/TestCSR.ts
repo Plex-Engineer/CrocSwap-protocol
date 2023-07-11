@@ -21,21 +21,6 @@ async function setBalance(address: string, balance: string) {
   });
 }
 
-async function upgradeProxy(dex: CrocSwapDex) {
-  const factory = await ethers.getContractFactory("WarmPath");
-  const warmPath = await factory.deploy();
-  await warmPath.deployed();
-  let cmd = new ethers.utils.AbiCoder().encode(
-    ["uint8", "address", "uint16"],
-    [21, warmPath.address, 2]
-  );
-  return await (
-    await dex
-      // .connect(await impersonate(dex.address))
-      .protocolCmd(0, cmd, true)
-  ).wait();
-}
-
 describe("CSR", () => {
   let turnstile: ICSRTurnstile;
   //random address
@@ -71,8 +56,6 @@ describe("CSR", () => {
     const csrID = await dex.csrID();
     const csrOwner = await turnstile.ownerOf(csrID);
 
-    // perform any function on dex to increase nft balance
-    await upgradeProxy(dex);
     // impersonate turnstile owner
     const turnstileSigner = await impersonate(await turnstile.owner());
     await setBalance(turnstileSigner.address, "0xffffffffffffffff");
