@@ -42,7 +42,6 @@ describe("CSR", () => {
     await dex.deployed();
 
     // check if dex has CSR attached
-    expect(await dex.csrID()).to.equal(currentNFTID);
     expect(await turnstile.getTokenId(dex.address)).to.equal(currentNFTID);
     expect(await turnstile.isRegistered(dex.address)).to.equal(true);
   });
@@ -54,7 +53,7 @@ describe("CSR", () => {
     const dex = (await dexFactory.deploy()) as CrocSwapDex;
     await dex.deployed();
 
-    const csrID = await dex.csrID();
+    const csrID = await turnstile.getTokenId(dex.address);
     const csrOwner = await turnstile.ownerOf(csrID);
     expect(deployer.address).to.equal(csrOwner);
 

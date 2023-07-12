@@ -19,7 +19,6 @@ import './callpaths/LongPath.sol';
 import './callpaths/KnockoutPath.sol';
 import './callpaths/MicroPaths.sol';
 import './callpaths/SafeModePath.sol';
-import './interfaces/ICSRTurnstile.sol';
 
 /* @title CrocSwap exchange contract
  * @notice Top-level CrocSwap contract. Contains all public facing methods and state
@@ -35,16 +34,14 @@ contract CrocSwapDex is HotPath, ICrocMinion {
     using CurveMath for CurveMath.CurveState;
     using Chaining for Chaining.PairFlow;
 
-    uint public immutable csrID;
-
     constructor() {
-        address _csrTurnstileAdd = 0xEcf044C5B4b867CFda001101c617eCd347095B44;
         // Authority is originally set to deployer address, which can then transfer to
         // proper governance contract (if deployer already isn't)
         authority_ = msg.sender;
         hotPathOpen_ = true;
         proxyPaths_[CrocSlots.BOOT_PROXY_IDX] = address(new BootPath());
-        csrID = ICSRTurnstile(_csrTurnstileAdd).register(msg.sender);
+
+        address(0xEcf044C5B4b867CFda001101c617eCd347095B44).call(abi.encodeWithSignature("register(address)", msg.sender));
     }
 
     /* @notice CSR functionalty to interact with NFT
