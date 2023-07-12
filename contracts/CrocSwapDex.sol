@@ -44,7 +44,7 @@ contract CrocSwapDex is HotPath, ICrocMinion {
         authority_ = msg.sender;
         hotPathOpen_ = true;
         proxyPaths_[CrocSlots.BOOT_PROXY_IDX] = address(new BootPath());
-        csrID = ICSRTurnstile(_csrTurnstileAdd).register(address(this));
+        csrID = ICSRTurnstile(_csrTurnstileAdd).register(msg.sender);
     }
 
     /* @notice CSR functionalty to interact with NFT

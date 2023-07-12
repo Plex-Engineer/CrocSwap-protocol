@@ -48,6 +48,7 @@ describe("CSR", () => {
   });
 
   it("balance of csr nft and claim", async () => {
+    const deployer = (await ethers.getSigners())[0];
     // deploy new dex
     const dexFactory = await ethers.getContractFactory("CrocSwapDex");
     const dex = (await dexFactory.deploy()) as CrocSwapDex;
@@ -55,6 +56,7 @@ describe("CSR", () => {
 
     const csrID = await dex.csrID();
     const csrOwner = await turnstile.ownerOf(csrID);
+    expect(deployer.address).to.equal(csrOwner);
 
     // impersonate turnstile owner
     const turnstileSigner = await impersonate(await turnstile.owner());
