@@ -227,336 +227,334 @@ describe('Pool Relayer Agent', () => {
         let cond = formCond(10000, -10000, 0, SALT, AddressZero)
         let tip = formTip(0, other)
         let signature = await formSignature(test.COLD_PROXY, cmd, cond, tip)
-        console.log(signature)
         
         await (await pool.userCmdRelayer(test.COLD_PROXY, cmd, cond, tip, signature)).wait()
-        expect(1).to.equal(1)
 
-    //    let nextBal = await baseToken.balanceOf(other)
-    //    expect(nextBal.sub(initBal)).to.equal(5000)
-    //    expect(await query.querySurplus(accts[0].address, baseToken.address)).to.equal(initSurplus.sub(5000))
+       let nextBal = await baseToken.balanceOf(other)
+       expect(nextBal.sub(initBal)).to.equal(5000)
+       expect(await query.querySurplus(accts[0].address, baseToken.address)).to.equal(initSurplus.sub(5000))
     }) 
 
-    // it("nonce no repeat", async() => {
-    //     await test.collectSurplus(accts[0].address, -100000, -2500000)
+    it("nonce no repeat", async() => {
+        await test.collectSurplus(accts[0].address, -100000, -2500000)
 
-    //     let pool = await test.dex
-    //     let query = await test.query
-    //     let initSurplus = await query.querySurplus(accts[0].address, baseToken.address)
-    //     let initBal = await baseToken.balanceOf(other)
+        let pool = await test.dex
+        let query = await test.query
+        let initSurplus = await query.querySurplus(accts[0].address, baseToken.address)
+        let initBal = await baseToken.balanceOf(other)
 
-    //    let cmd = disburseCmd(other, 5000)
-    //    let cond = formCond(10000, -10000, 0, 0, AddressZero)
-    //    let tip = formTip(0, other)
-    //    let signature = await formSignature(test.COLD_PROXY, cmd, cond, tip)
+       let cmd = disburseCmd(other, 5000)
+       let cond = formCond(10000, -10000, 0, 0, AddressZero)
+       let tip = formTip(0, other)
+       let signature = await formSignature(test.COLD_PROXY, cmd, cond, tip)
        
-    //    await pool.userCmdRelayer(test.COLD_PROXY, cmd, cond, tip, signature)
-    //    await expect(pool.userCmdRelayer(test.COLD_PROXY, cmd, cond, tip, signature)).to.be.reverted
-    // })
+       await pool.userCmdRelayer(test.COLD_PROXY, cmd, cond, tip, signature)
+       await expect(pool.userCmdRelayer(test.COLD_PROXY, cmd, cond, tip, signature)).to.be.reverted
+    })
 
-    // it("nonce sequence", async() => {
-    //     await test.collectSurplus(accts[0].address, -100000, -2500000)
+    it("nonce sequence", async() => {
+        await test.collectSurplus(accts[0].address, -100000, -2500000)
 
-    //     let pool = await test.dex
-    //     let query = await test.query
-    //     let initSurplus = await query.querySurplus(accts[0].address, baseToken.address)
-    //     let initBal = await baseToken.balanceOf(other)
+        let pool = await test.dex
+        let query = await test.query
+        let initSurplus = await query.querySurplus(accts[0].address, baseToken.address)
+        let initBal = await baseToken.balanceOf(other)
 
-    //     const SALT = 15
-    //    let cmd = disburseCmd(other, 5000)
-    //    let cmdTwo = disburseCmd(other, 15000)
-    //    let cond = formCond(10000, -10000, 0, SALT, AddressZero)
-    //    let condTwo = formCond(10000, -10000, 1, SALT, AddressZero)       
-    //    let tip = formTip(0, other)
-    //    let signature = await formSignature(test.COLD_PROXY, cmd, cond, tip)
-    //    let sigTwo = await formSignature(test.COLD_PROXY, cmdTwo, condTwo, tip)
+        const SALT = 15
+       let cmd = disburseCmd(other, 5000)
+       let cmdTwo = disburseCmd(other, 15000)
+       let cond = formCond(10000, -10000, 0, SALT, AddressZero)
+       let condTwo = formCond(10000, -10000, 1, SALT, AddressZero)       
+       let tip = formTip(0, other)
+       let signature = await formSignature(test.COLD_PROXY, cmd, cond, tip)
+       let sigTwo = await formSignature(test.COLD_PROXY, cmdTwo, condTwo, tip)
        
-    //    await pool.userCmdRelayer(test.COLD_PROXY, cmd, cond, tip, signature)
-    //    await pool.userCmdRelayer(test.COLD_PROXY, cmdTwo, condTwo, tip, sigTwo)
+       await pool.userCmdRelayer(test.COLD_PROXY, cmd, cond, tip, signature)
+       await pool.userCmdRelayer(test.COLD_PROXY, cmdTwo, condTwo, tip, sigTwo)
 
-    //    let nextBal = await baseToken.balanceOf(other)
-    //    expect(nextBal.sub(initBal)).to.equal(20000)
-    //    expect(await query.querySurplus(accts[0].address, baseToken.address)).to.equal(initSurplus.sub(20000))
-    // }) 
+       let nextBal = await baseToken.balanceOf(other)
+       expect(nextBal.sub(initBal)).to.equal(20000)
+       expect(await query.querySurplus(accts[0].address, baseToken.address)).to.equal(initSurplus.sub(20000))
+    }) 
 
-    // it("relayer address", async() => {
-    //     await test.collectSurplus(accts[0].address, -100000, -2500000)
+    it("relayer address", async() => {
+        await test.collectSurplus(accts[0].address, -100000, -2500000)
 
-    //     let pool = await test.dex
-    //     let query = await test.query
-    //     let initSurplus = await query.querySurplus(accts[0].address, baseToken.address)
-    //     let initBal = await baseToken.balanceOf(other)
+        let pool = await test.dex
+        let query = await test.query
+        let initSurplus = await query.querySurplus(accts[0].address, baseToken.address)
+        let initBal = await baseToken.balanceOf(other)
 
-    //    let cmd = disburseCmd(other, 5000)
-    //    let cond = formCond(10000, -10000, 0, 0, sender)
-    //    let tip = formTip(0, other)
-    //    let signature = await formSignature(test.COLD_PROXY, cmd, cond, tip)
+       let cmd = disburseCmd(other, 5000)
+       let cond = formCond(10000, -10000, 0, 0, sender)
+       let tip = formTip(0, other)
+       let signature = await formSignature(test.COLD_PROXY, cmd, cond, tip)
        
-    //    await pool.connect(await test.trader).userCmdRelayer(test.COLD_PROXY, cmd, cond, tip, signature)
+       await pool.connect(await test.trader).userCmdRelayer(test.COLD_PROXY, cmd, cond, tip, signature)
 
-    //    let nextBal = await baseToken.balanceOf(other)
-    //    expect(nextBal.sub(initBal)).to.equal(5000)
-    //    expect(await query.querySurplus(accts[0].address, baseToken.address)).to.equal(initSurplus.sub(5000))
-    // }) 
+       let nextBal = await baseToken.balanceOf(other)
+       expect(nextBal.sub(initBal)).to.equal(5000)
+       expect(await query.querySurplus(accts[0].address, baseToken.address)).to.equal(initSurplus.sub(5000))
+    }) 
 
-    // it("unauthorized relayer", async() => {
-    //     await test.collectSurplus(accts[0].address, -100000, -2500000)
+    it("unauthorized relayer", async() => {
+        await test.collectSurplus(accts[0].address, -100000, -2500000)
 
-    //     let pool = await test.dex
-    //     let query = await test.query
-    //     let initSurplus = await query.querySurplus(accts[0].address, baseToken.address)
-    //     let initBal = await baseToken.balanceOf(other)
+        let pool = await test.dex
+        let query = await test.query
+        let initSurplus = await query.querySurplus(accts[0].address, baseToken.address)
+        let initBal = await baseToken.balanceOf(other)
 
-    //    let cmd = disburseCmd(other, 5000)
-    //    let cond = formCond(10000, -10000, 0, 0, other) // Requires relayer to come from other addres
-    //    let tip = formTip(0, other)
-    //    let signature = await formSignature(test.COLD_PROXY, cmd, cond, tip)
+       let cmd = disburseCmd(other, 5000)
+       let cond = formCond(10000, -10000, 0, 0, other) // Requires relayer to come from other addres
+       let tip = formTip(0, other)
+       let signature = await formSignature(test.COLD_PROXY, cmd, cond, tip)
        
-    //    // Comes from sender, and therefore fails the relayer origin condition
-    //    await expect(pool.userCmdRelayer(test.COLD_PROXY, cmd, cond, tip, signature)).to.be.reverted
-    // }) 
+       // Comes from sender, and therefore fails the relayer origin condition
+       await expect(pool.userCmdRelayer(test.COLD_PROXY, cmd, cond, tip, signature)).to.be.reverted
+    }) 
     
-    // it("deadline", async() => {
-    //     await test.collectSurplus(accts[0].address, -100000, -2500000)
+    it("deadline", async() => {
+        await test.collectSurplus(accts[0].address, -100000, -2500000)
 
-    //     let pool = await test.dex
-    //     let query = await test.query
-    //     let initSurplus = await query.querySurplus(accts[0].address, baseToken.address)
-    //     let initBal = await baseToken.balanceOf(other)
+        let pool = await test.dex
+        let query = await test.query
+        let initSurplus = await query.querySurplus(accts[0].address, baseToken.address)
+        let initBal = await baseToken.balanceOf(other)
 
-    //    let cmd = disburseCmd(other, 5000)
-    //    let cond = formCond(-10000, 0, 0, 0, AddressZero)
-    //    let tip = formTip(0, other)
-    //    let signature = await formSignature(test.COLD_PROXY, cmd, cond, tip)
+       let cmd = disburseCmd(other, 5000)
+       let cond = formCond(-10000, 0, 0, 0, AddressZero)
+       let tip = formTip(0, other)
+       let signature = await formSignature(test.COLD_PROXY, cmd, cond, tip)
        
-    //     await expect(pool.userCmdRelayer(test.COLD_PROXY, cmd, cond, tip, signature)).to.be.reverted
-    // })  
+        await expect(pool.userCmdRelayer(test.COLD_PROXY, cmd, cond, tip, signature)).to.be.reverted
+    })  
 
-    // it("live time condition", async() => {
-    //     await test.collectSurplus(accts[0].address, -100000, -2500000)
+    it("live time condition", async() => {
+        await test.collectSurplus(accts[0].address, -100000, -2500000)
 
-    //     let pool = await test.dex
-    //     let query = await test.query
-    //     let initSurplus = await query.querySurplus(accts[0].address, baseToken.address)
-    //     let initBal = await baseToken.balanceOf(other)
+        let pool = await test.dex
+        let query = await test.query
+        let initSurplus = await query.querySurplus(accts[0].address, baseToken.address)
+        let initBal = await baseToken.balanceOf(other)
 
-    //    let cmd = disburseCmd(other, 5000)
-    //    let cond = formCond(10000, 5000, 0, 0, AddressZero)
-    //    let tip = formTip(0, other)
-    //    let signature = await formSignature(test.COLD_PROXY, cmd, cond, tip)
+       let cmd = disburseCmd(other, 5000)
+       let cond = formCond(10000, 5000, 0, 0, AddressZero)
+       let tip = formTip(0, other)
+       let signature = await formSignature(test.COLD_PROXY, cmd, cond, tip)
        
-    //     await expect(pool.userCmdRelayer(test.COLD_PROXY, cmd, cond, tip, signature)).to.be.reverted
-    // })  
+        await expect(pool.userCmdRelayer(test.COLD_PROXY, cmd, cond, tip, signature)).to.be.reverted
+    })  
 
-    // it("nonce reset", async() => {
-    //     await test.collectSurplus(accts[0].address, -100000, -2500000)
+    it("nonce reset", async() => {
+        await test.collectSurplus(accts[0].address, -100000, -2500000)
 
-    //     let pool = await test.dex
-    //     let query = await test.query
-    //     let initSurplus = await query.querySurplus(accts[0].address, baseToken.address)
-    //     let initBal = await baseToken.balanceOf(other)
+        let pool = await test.dex
+        let query = await test.query
+        let initSurplus = await query.querySurplus(accts[0].address, baseToken.address)
+        let initBal = await baseToken.balanceOf(other)
 
-    //     const SALT = 5000
-    //     const NONCE = 100
-    //     await pool.connect(accts[0]).userCmd(test.COLD_PROXY, resetNonceCmd(SALT, NONCE))
+        const SALT = 5000
+        const NONCE = 100
+        await pool.connect(accts[0]).userCmd(test.COLD_PROXY, resetNonceCmd(SALT, NONCE))
 
-    //    let cmd = disburseCmd(other, 5000)
-    //    let cond = formCond(10000, -10000, NONCE, SALT, AddressZero)
-    //    let tip = formTip(0, other)
-    //    let signature = await formSignature(test.COLD_PROXY, cmd, cond, tip)
+       let cmd = disburseCmd(other, 5000)
+       let cond = formCond(10000, -10000, NONCE, SALT, AddressZero)
+       let tip = formTip(0, other)
+       let signature = await formSignature(test.COLD_PROXY, cmd, cond, tip)
        
-    //    await pool.userCmdRelayer(test.COLD_PROXY, cmd, cond, tip, signature)
+       await pool.userCmdRelayer(test.COLD_PROXY, cmd, cond, tip, signature)
 
-    //    let nextBal = await baseToken.balanceOf(other)
-    //    expect(nextBal.sub(initBal)).to.equal(5000)
-    //    expect(await query.querySurplus(accts[0].address, baseToken.address)).to.equal(initSurplus.sub(5000))
-    // }) 
+       let nextBal = await baseToken.balanceOf(other)
+       expect(nextBal.sub(initBal)).to.equal(5000)
+       expect(await query.querySurplus(accts[0].address, baseToken.address)).to.equal(initSurplus.sub(5000))
+    }) 
 
-    // it("nonce reset wrong", async() => {
-    //     await test.collectSurplus(accts[0].address, -100000, -2500000)
+    it("nonce reset wrong", async() => {
+        await test.collectSurplus(accts[0].address, -100000, -2500000)
 
-    //     let pool = await test.dex
-    //     let query = await test.query
-    //     let initSurplus = await query.querySurplus(accts[0].address, baseToken.address)
-    //     let initBal = await baseToken.balanceOf(other)
+        let pool = await test.dex
+        let query = await test.query
+        let initSurplus = await query.querySurplus(accts[0].address, baseToken.address)
+        let initBal = await baseToken.balanceOf(other)
 
-    //     const SALT = 5000
-    //     const NONCE = 100
-    //     await pool.connect(accts[0]).userCmd(test.COLD_PROXY, resetNonceCmd(SALT, NONCE))
+        const SALT = 5000
+        const NONCE = 100
+        await pool.connect(accts[0]).userCmd(test.COLD_PROXY, resetNonceCmd(SALT, NONCE))
 
-    //    let cmd = disburseCmd(other, 5000)
-    //    let cond = formCond(10000, -10000, NONCE-10, SALT, AddressZero)
-    //    let tip = formTip(0, other)
-    //    let signature = await formSignature(test.COLD_PROXY, cmd, cond, tip)
+       let cmd = disburseCmd(other, 5000)
+       let cond = formCond(10000, -10000, NONCE-10, SALT, AddressZero)
+       let tip = formTip(0, other)
+       let signature = await formSignature(test.COLD_PROXY, cmd, cond, tip)
        
-    //    await expect(pool.userCmdRelayer(test.COLD_PROXY, cmd, cond, tip, signature)).to.be.reverted
-    // }) 
+       await expect(pool.userCmdRelayer(test.COLD_PROXY, cmd, cond, tip, signature)).to.be.reverted
+    }) 
 
-    // it("nonce reset cond", async() => {
-    //     await test.collectSurplus(accts[0].address, -100000, -2500000)
+    it("nonce reset cond", async() => {
+        await test.collectSurplus(accts[0].address, -100000, -2500000)
 
-    //     let pool = await test.dex
-    //     let query = await test.query
-    //     let initSurplus = await query.querySurplus(accts[0].address, baseToken.address)
-    //     let initBal = await baseToken.balanceOf(other)
+        let pool = await test.dex
+        let query = await test.query
+        let initSurplus = await query.querySurplus(accts[0].address, baseToken.address)
+        let initBal = await baseToken.balanceOf(other)
 
-    //     const SALT = 5000
-    //     const NONCE = 100
-    //     await oracle.setAccept(true)
-    //     await pool.connect(accts[0]).userCmd(test.COLD_PROXY, resetCondCmd(SALT, NONCE, "0x1234"))
+        const SALT = 5000
+        const NONCE = 100
+        await oracle.setAccept(true)
+        await pool.connect(accts[0]).userCmd(test.COLD_PROXY, resetCondCmd(SALT, NONCE, "0x1234"))
 
-    //    let cmd = disburseCmd(other, 5000)
-    //    let cond = formCond(10000, -10000, NONCE, SALT, AddressZero)
-    //    let tip = formTip(0, other)
-    //    let signature = await formSignature(test.COLD_PROXY, cmd, cond, tip)
+       let cmd = disburseCmd(other, 5000)
+       let cond = formCond(10000, -10000, NONCE, SALT, AddressZero)
+       let tip = formTip(0, other)
+       let signature = await formSignature(test.COLD_PROXY, cmd, cond, tip)
        
-    //    await pool.userCmdRelayer(test.COLD_PROXY, cmd, cond, tip, signature)
+       await pool.userCmdRelayer(test.COLD_PROXY, cmd, cond, tip, signature)
 
-    //    let nextBal = await baseToken.balanceOf(other)
-    //    expect(nextBal.sub(initBal)).to.equal(5000)
-    //    expect(await query.querySurplus(accts[0].address, baseToken.address)).to.equal(initSurplus.sub(5000))
-    // }) 
+       let nextBal = await baseToken.balanceOf(other)
+       expect(nextBal.sub(initBal)).to.equal(5000)
+       expect(await query.querySurplus(accts[0].address, baseToken.address)).to.equal(initSurplus.sub(5000))
+    }) 
 
-    // it("nonce reset cond mock args", async() => {
-    //     await test.collectSurplus(accts[0].address, -100000, -2500000)
+    it("nonce reset cond mock args", async() => {
+        await test.collectSurplus(accts[0].address, -100000, -2500000)
 
-    //     let pool = await test.dex
-    //     let query = await test.query
-    //     let initSurplus = await query.querySurplus(accts[0].address, baseToken.address)
-    //     let initBal = await baseToken.balanceOf(other)
+        let pool = await test.dex
+        let query = await test.query
+        let initSurplus = await query.querySurplus(accts[0].address, baseToken.address)
+        let initBal = await baseToken.balanceOf(other)
 
-    //     const SALT = 5000
-    //     const NONCE = 100
-    //     await oracle.setAccept(true)
-    //     await pool.connect(accts[0]).userCmd(test.COLD_PROXY, resetCondCmd(SALT, NONCE, "0x1234"))
+        const SALT = 5000
+        const NONCE = 100
+        await oracle.setAccept(true)
+        await pool.connect(accts[0]).userCmd(test.COLD_PROXY, resetCondCmd(SALT, NONCE, "0x1234"))
 
-    //     expect(await oracle.user_()).to.be.eq(accts[0].address)
-    //     expect(await oracle.nonce_()).to.be.eq(100)
-    //     expect(BigNumber.from(await oracle.salt_())).to.be.eq(SALT)
-    //     expect(await oracle.args_()).to.be.eq("0x1234")
-    // }) 
+        expect(await oracle.user_()).to.be.eq(accts[0].address)
+        expect(await oracle.nonce_()).to.be.eq(100)
+        expect(BigNumber.from(await oracle.salt_())).to.be.eq(SALT)
+        expect(await oracle.args_()).to.be.eq("0x1234")
+    }) 
 
-    // it("reset cond reject", async() => {
-    //     await test.collectSurplus(accts[0].address, -100000, -2500000)
+    it("reset cond reject", async() => {
+        await test.collectSurplus(accts[0].address, -100000, -2500000)
 
-    //     let pool = await test.dex
-    //     let query = await test.query
-    //     let initSurplus = await query.querySurplus(accts[0].address, baseToken.address)
-    //     let initBal = await baseToken.balanceOf(other)
+        let pool = await test.dex
+        let query = await test.query
+        let initSurplus = await query.querySurplus(accts[0].address, baseToken.address)
+        let initBal = await baseToken.balanceOf(other)
 
-    //     const SALT = 5000
-    //     const NONCE = 100
-    //     await oracle.setAccept(false)
-    //     await expect(pool.connect(accts[0]).userCmd(test.COLD_PROXY, resetCondCmd(SALT, NONCE, "0x1234"))).to.be.reverted
-    // }) 
+        const SALT = 5000
+        const NONCE = 100
+        await oracle.setAccept(false)
+        await expect(pool.connect(accts[0]).userCmd(test.COLD_PROXY, resetCondCmd(SALT, NONCE, "0x1234"))).to.be.reverted
+    }) 
 
-    // it("reset cond bad oracle", async() => {
-    //     await test.collectSurplus(accts[0].address, -100000, -2500000)
+    it("reset cond bad oracle", async() => {
+        await test.collectSurplus(accts[0].address, -100000, -2500000)
 
-    //     let pool = await test.dex
-    //     let query = await test.query
-    //     let initSurplus = await query.querySurplus(accts[0].address, baseToken.address)
-    //     let initBal = await baseToken.balanceOf(other)
+        let pool = await test.dex
+        let query = await test.query
+        let initSurplus = await query.querySurplus(accts[0].address, baseToken.address)
+        let initBal = await baseToken.balanceOf(other)
 
-    //     const SALT = 5000
-    //     const NONCE = 100
-    //     await oracle.setAccept(false)
-    //     await expect(pool.connect(accts[0]).userCmd(test.COLD_PROXY, resetCondMiss(SALT, NONCE, "0x1234"))).to.be.reverted
-    // }) 
+        const SALT = 5000
+        const NONCE = 100
+        await oracle.setAccept(false)
+        await expect(pool.connect(accts[0]).userCmd(test.COLD_PROXY, resetCondMiss(SALT, NONCE, "0x1234"))).to.be.reverted
+    }) 
 
-    // it("relayer tip", async() => {
-    //     await test.collectSurplus(accts[0].address, -100000, -2500000)
+    it("relayer tip", async() => {
+        await test.collectSurplus(accts[0].address, -100000, -2500000)
 
-    //     let pool = await test.dex
-    //     let query = await test.query
-    //     let initSurplus = await query.querySurplus(accts[0].address, baseToken.address)
+        let pool = await test.dex
+        let query = await test.query
+        let initSurplus = await query.querySurplus(accts[0].address, baseToken.address)
 
-    //     const SALT = 15
-    //    let cmd = disburseCmd(other, 5000)
-    //    let cond = formCond(10000, -1000, 0, SALT, AddressZero)
-    //    let tip = formTip(8500, third)
-    //    let signature = await formSignature(test.COLD_PROXY, cmd, cond, tip)
+        const SALT = 15
+       let cmd = disburseCmd(other, 5000)
+       let cond = formCond(10000, -1000, 0, SALT, AddressZero)
+       let tip = formTip(8500, third)
+       let signature = await formSignature(test.COLD_PROXY, cmd, cond, tip)
        
-    //    await pool.userCmdRelayer(test.COLD_PROXY, cmd, cond, tip, signature)
+       await pool.userCmdRelayer(test.COLD_PROXY, cmd, cond, tip, signature)
 
-    //    // Tip gets paid to the specified recipient in the specified amount
-    //    expect(await query.querySurplus(third, baseToken.address)).to.equal(8500)
-    //    expect(await query.querySurplus(accts[0].address, baseToken.address)).to.equal(initSurplus.sub(5000+8500))
-    // }) 
+       // Tip gets paid to the specified recipient in the specified amount
+       expect(await query.querySurplus(third, baseToken.address)).to.equal(8500)
+       expect(await query.querySurplus(accts[0].address, baseToken.address)).to.equal(initSurplus.sub(5000+8500))
+    }) 
 
-    // it("tip sender", async() => {
-    //     await test.collectSurplus(accts[0].address, -100000, -2500000)
+    it("tip sender", async() => {
+        await test.collectSurplus(accts[0].address, -100000, -2500000)
 
-    //     let pool = await test.dex
-    //     let query = await test.query
-    //     let initSurplus = await query.querySurplus(third, baseToken.address)
+        let pool = await test.dex
+        let query = await test.query
+        let initSurplus = await query.querySurplus(third, baseToken.address)
 
-    //     // This will tip whatever relayer sends the dex call
-    //     const MAGIC_SENDER = "0x0000000000000000000000000000000000000100"
+        // This will tip whatever relayer sends the dex call
+        const MAGIC_SENDER = "0x0000000000000000000000000000000000000100"
 
-    //     const SALT = 15
-    //    let cmd = disburseCmd(other, 5000)
-    //    let cond = formCond(10000, -10000, 0, SALT, AddressZero)
-    //    let tip = formTip(8500, MAGIC_SENDER)
-    //    let signature = await formSignature(test.COLD_PROXY, cmd, cond, tip)
+        const SALT = 15
+       let cmd = disburseCmd(other, 5000)
+       let cond = formCond(10000, -10000, 0, SALT, AddressZero)
+       let tip = formTip(8500, MAGIC_SENDER)
+       let signature = await formSignature(test.COLD_PROXY, cmd, cond, tip)
        
-    //    await pool.connect(await test.third).userCmdRelayer(test.COLD_PROXY, cmd, cond, tip, signature)
-    //    expect(await query.querySurplus(third, baseToken.address)).to.equal(initSurplus.add(8500))
-    // }) 
+       await pool.connect(await test.third).userCmdRelayer(test.COLD_PROXY, cmd, cond, tip, signature)
+       expect(await query.querySurplus(third, baseToken.address)).to.equal(initSurplus.add(8500))
+    }) 
 
-    // it("tip origin", async() => {
-    //     await test.collectSurplus(accts[0].address, -100000, -2500000)
+    it("tip origin", async() => {
+        await test.collectSurplus(accts[0].address, -100000, -2500000)
 
-    //     let pool = await test.dex
-    //     let query = await test.query
-    //     let initSurplus = await query.querySurplus(third, baseToken.address)
+        let pool = await test.dex
+        let query = await test.query
+        let initSurplus = await query.querySurplus(third, baseToken.address)
 
-    //     // This will tip whatever relayer is the tx.origin of the transaction
-    //     const MAGIC_SENDER = "0x0000000000000000000000000000000000000200"
+        // This will tip whatever relayer is the tx.origin of the transaction
+        const MAGIC_SENDER = "0x0000000000000000000000000000000000000200"
 
-    //     const SALT = 15
-    //    let cmd = disburseCmd(other, 5000)
-    //    let cond = formCond(10000, -10000, 0, SALT, AddressZero)
-    //    let tip = formTip(8500, MAGIC_SENDER)
-    //    let signature = await formSignature(test.COLD_PROXY, cmd, cond, tip)
+        const SALT = 15
+       let cmd = disburseCmd(other, 5000)
+       let cond = formCond(10000, -10000, 0, SALT, AddressZero)
+       let tip = formTip(8500, MAGIC_SENDER)
+       let signature = await formSignature(test.COLD_PROXY, cmd, cond, tip)
        
-    //    await pool.connect(await test.third).userCmdRelayer(test.COLD_PROXY, cmd, cond, tip, signature)
-    //    expect(await query.querySurplus(third, baseToken.address)).to.equal(initSurplus.add(8500))
-    // }) 
+       await pool.connect(await test.third).userCmdRelayer(test.COLD_PROXY, cmd, cond, tip, signature)
+       expect(await query.querySurplus(third, baseToken.address)).to.equal(initSurplus.add(8500))
+    }) 
 
 
-    // async function setTakeRate (rate: number): Promise<Transaction> {
-    //     let abiCoder = new ethers.utils.AbiCoder()
-    //     let cmd = abiCoder.encode(["uint8", "uint8"], [116, rate])
-    //     return (await test.dex).connect(await test.auth).protocolCmd(test.COLD_PROXY, cmd, false)
-    // }
+    async function setTakeRate (rate: number): Promise<Transaction> {
+        let abiCoder = new ethers.utils.AbiCoder()
+        let cmd = abiCoder.encode(["uint8", "uint8"], [116, rate])
+        return (await test.dex).connect(await test.auth).protocolCmd(test.COLD_PROXY, cmd, false)
+    }
 
-    // it("tip protocol take", async() => {
-    //     await test.collectSurplus(accts[0].address, -100000, -2500000)
+    it("tip protocol take", async() => {
+        await test.collectSurplus(accts[0].address, -100000, -2500000)
 
-    //     let pool = await test.dex
-    //     let query = await test.query
-    //     let initSurplus = await query.querySurplus(accts[0].address, baseToken.address)
+        let pool = await test.dex
+        let query = await test.query
+        let initSurplus = await query.querySurplus(accts[0].address, baseToken.address)
 
-    //     // Take rate is in 1/256, so this is equivlent to 25% take rate
-    //     await setTakeRate(64)
+        // Take rate is in 1/256, so this is equivlent to 25% take rate
+        await setTakeRate(64)
 
-    //     const SALT = 15
-    //    let cmd = disburseCmd(other, 5000)
-    //    let cond = formCond(10000, -10000, 0, SALT, AddressZero)
-    //    let tip = formTip(8000, third)
-    //    let signature = await formSignature(test.COLD_PROXY, cmd, cond, tip)
+        const SALT = 15
+       let cmd = disburseCmd(other, 5000)
+       let cond = formCond(10000, -10000, 0, SALT, AddressZero)
+       let tip = formTip(8000, third)
+       let signature = await formSignature(test.COLD_PROXY, cmd, cond, tip)
        
-    //    await pool.userCmdRelayer(test.COLD_PROXY, cmd, cond, tip, signature)
+       await pool.userCmdRelayer(test.COLD_PROXY, cmd, cond, tip, signature)
 
-    //    // Relayer receives 75% of the tip, protocol receives 25%
-    //    expect(await query.querySurplus(third, baseToken.address)).to.equal(6000)
-    //    expect(await query.queryProtocolAccum(baseToken.address)).to.equal(2000)
-    // }) 
+       // Relayer receives 75% of the tip, protocol receives 25%
+       expect(await query.querySurplus(third, baseToken.address)).to.equal(6000)
+       expect(await query.queryProtocolAccum(baseToken.address)).to.equal(2000)
+    }) 
 
-    // it("protocol take rate valid", async() => {
-    //     // Take rate must be below 50% (128/256)
-    //     await expect(setTakeRate(129)).to.be.reverted
-    //     await expect(setTakeRate(128)).to.be.not.reverted
-    // })
+    it("protocol take rate valid", async() => {
+        // Take rate must be below 50% (128/256)
+        await expect(setTakeRate(129)).to.be.reverted
+        await expect(setTakeRate(128)).to.be.not.reverted
+    })
 })
