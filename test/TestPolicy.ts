@@ -34,7 +34,7 @@ describe('CrocPolicy', () => {
       ops = (await factory.deploy(policy.address)) as MockTimelock;
       emergency = (await factory.deploy(policy.address)) as MockTimelock;
 
-      policy.transferGovernance(ops.address, treasury.address, emergency.address);
+      await (await policy.transferGovernance(ops.address, treasury.address, emergency.address)).wait();
     })
 
     it("constructor addresses", async() => {
@@ -94,7 +94,7 @@ describe('CrocPolicy', () => {
 
     it("ops resolution", async() => {
         // Only treasury can transfer authority
-        ops.opsResolution(minion.address, 5, "0x1234")
+       await (await ops.opsResolution(minion.address, 5, "0x1234")).wait()
 
         expect(await minion.protoCmds_(0)).to.eq("0x1234")
         expect(await minion.paths_(0)).to.eq(5)
@@ -103,7 +103,7 @@ describe('CrocPolicy', () => {
 
     it("ops resolution from treasury", async() => {
         // Only treasury can transfer authority
-        treasury.opsResolution(minion.address, 5, "0x1234")
+        await (await ops.opsResolution(minion.address, 5, "0x1234")).wait()
 
         expect(await minion.protoCmds_(0)).to.eq("0x1234")
         expect(await minion.paths_(0)).to.eq(5)
@@ -112,7 +112,7 @@ describe('CrocPolicy', () => {
 
     it("ops resolution from emergency", async() => {
         // Only treasury can transfer authority
-        emergency.opsResolution(minion.address, 5, "0x1234")
+        await (await ops.opsResolution(minion.address, 5, "0x1234")).wait()
 
         expect(await minion.protoCmds_(0)).to.eq("0x1234")
         expect(await minion.paths_(0)).to.eq(5)
@@ -170,10 +170,10 @@ describe('CrocPolicy', () => {
     it("policy invoke", async() => {
         const PROXY_PATH = 25
         const FLAGS = "0x0000000000000000000000000000000000000000000000000000000000000009"
-        const expiry = Math.floor(Date.now() / 1000) + 10000
+        const expiry = Math.floor(Date.now() / 1000) + 10000000
 
-        await ops.setPolicy(accts[4].address, PROXY_PATH, 
-            { cmdFlags_: FLAGS, mandateTime_: 0, expiryOffset_: expiry})
+        await (await ops.setPolicy(accts[4].address, PROXY_PATH, 
+            { cmdFlags_: FLAGS, mandateTime_: 0, expiryOffset_: expiry})).wait()
 
         let abiCoder = new ethers.utils.AbiCoder()
         let cmd = abiCoder.encode(["uint8", "string"], [0, "hello"])
@@ -188,10 +188,10 @@ describe('CrocPolicy', () => {
     it("policy invoke flag pos", async() => {
         const PROXY_PATH = 25
         const FLAGS = "0x0000000000000000000000000000000000000000000000000000000000000009"
-        const expiry = Math.floor(Date.now() / 1000) + 10000
+        const expiry = Math.floor(Date.now() / 1000) + 10000000
 
-        await ops.setPolicy(accts[4].address, PROXY_PATH, 
-            { cmdFlags_: FLAGS, mandateTime_: 0, expiryOffset_: expiry})
+       await ( await ops.setPolicy(accts[4].address, PROXY_PATH, 
+            { cmdFlags_: FLAGS, mandateTime_: 0, expiryOffset_: expiry})).wait()
 
         let abiCoder = new ethers.utils.AbiCoder()
         let cmd = abiCoder.encode(["uint8", "string"], [3, "hello"]) // Corresponds to flag for 0x8 bit
@@ -237,8 +237,8 @@ describe('CrocPolicy', () => {
         const FLAGS = "0x0000000000000000000000000000000000000000000000000000000000000009"
         const expiry = Math.floor(Date.now() / 1000) - 10000 // Expires in past
 
-        await ops.setPolicy(accts[4].address, PROXY_PATH, 
-            { cmdFlags_: FLAGS, mandateTime_: 0, expiryOffset_: expiry})
+       await ( await ops.setPolicy(accts[4].address, PROXY_PATH, 
+            { cmdFlags_: FLAGS, mandateTime_: 0, expiryOffset_: expiry})).wait()
 
         let abiCoder = new ethers.utils.AbiCoder()
         let cmd = abiCoder.encode(["uint8", "string"], [0, "hello"])
@@ -279,8 +279,8 @@ describe('CrocPolicy', () => {
         const expiry = Math.floor(Date.now() / 1000) + 10000
 
         // Expiry should add the offset to mandate time, therefore this any call should be within the expiry
-        await ops.setPolicy(accts[4].address, PROXY_PATH, 
-            { cmdFlags_: FLAGS, mandateTime_: expiry, expiryOffset_: 5000})
+        await (await ops.setPolicy(accts[4].address, PROXY_PATH, 
+            { cmdFlags_: FLAGS, mandateTime_: expiry, expiryOffset_: 5000000})).wait()
 
         let abiCoder = new ethers.utils.AbiCoder()
         let cmd = abiCoder.encode(["uint8", "string"], [2, "hello"])
@@ -298,11 +298,11 @@ describe('CrocPolicy', () => {
         const FLAGS =      "0x000000000000000000000000000000000000000000000000000000000000000d"
         const WEAK_FLAGS = "0x0000000000000000000000000000000000000000000000000000000000000005"
         const STRONG_FLAGS = "0x000000000000000000000000000000000000000000000000000000000000001d"
-        const expiry = Math.floor(Date.now() / 1000) + 10000
+        const expiry = Math.floor(Date.now() / 1000) + 10000000
 
         // Expiry should add the offset to mandate time, therefore this any call should be within the expiry
-        await ops.setPolicy(accts[4].address, PROXY_PATH, 
-            { cmdFlags_: FLAGS, mandateTime_: expiry, expiryOffset_: 5000})
+        await (await ops.setPolicy(accts[4].address, PROXY_PATH, 
+            { cmdFlags_: FLAGS, mandateTime_: expiry, expiryOffset_: 5000})).wait()
 
         // Reduces the mandate time and therefore weakens the policy
         await expect(ops.setPolicy(accts[4].address, PROXY_PATH, 

@@ -217,18 +217,18 @@ export class TestPool {
             knockoutFlagPath,
             kockoutLiqPath,
             safeModePath
-        ] = await Promise.all(factories.map(async (f) => f.connect(await this.auth).deploy()))
+        ] = await Promise.all(factories.map(async (f) => (await (f.connect(await this.auth).deploy())).deployed()))
         
     
         // upgrade each sidecar
         await Promise.all([
-          await this.testUpgrade(2, warmPath.address),
-          await this.testUpgrade(3, coldPath.address),
-          await this.testUpgrade(4, longPath.address),
-          await this.testUpgrade(5, microPath.address),
-          await this.testUpgrade(3500, knockoutFlagPath.address),
-          await this.testUpgrade(7, kockoutLiqPath.address),
-          await this.testUpgrade(9999, safeModePath.address),
+          await (await this.testUpgrade(2, warmPath.address)).wait(),
+          await (await this.testUpgrade(3, coldPath.address)).wait(),
+          await (await this.testUpgrade(4, longPath.address)).wait(),
+          await (await this.testUpgrade(5, microPath.address)).wait(),
+          await (await this.testUpgrade(3500, knockoutFlagPath.address)).wait(),
+          await (await this.testUpgrade(7, kockoutLiqPath.address)).wait(),
+          await (await this.testUpgrade(9999, safeModePath.address)).wait(),
         ]);
     }
 
@@ -633,11 +633,11 @@ export class TestPool {
 
         if (protoTake > 0) {
             let takeCmd = abiCoder.encode(["uint8", "uint8"], [114, protoTake]);
-            (await this.dex).connect(await this.auth).protocolCmd(this.COLD_PROXY, takeCmd, false)
+            await (await ((await this.dex).connect(await this.auth).protocolCmd(this.COLD_PROXY, takeCmd, false))).wait()
 
             takeCmd = abiCoder.encode(["uint8", "address", "address", "uint256"],
                 [115, (await this.base).address, (await this.quote).address, idx]);
-            (await this.dex).connect(await this.auth).protocolCmd(this.COLD_PROXY, takeCmd, false)              
+            await (await ((await this.dex).connect(await this.auth).protocolCmd(this.COLD_PROXY, takeCmd, false))).wait()              
         }
 
         let cmd = abiCoder.encode(["uint8", "address", "address", "uint256", "uint16", "uint16", "uint8", "uint8"],
@@ -790,8 +790,8 @@ export class TestPool {
     }
 
     async collectSurplus (recv: string, base: number | BigNumber, quote: number | BigNumber) {
-        await this.testCollectSurplus(await this.trader, recv, base, (await this.base).address, false)
-        await this.testCollectSurplus(await this.trader, recv, quote, (await this.quote).address, false)
+        await (await this.testCollectSurplus(await this.trader, recv, base, (await this.base).address, false)).wait()
+        await (await this.testCollectSurplus(await this.trader, recv, quote, (await this.quote).address, false)).wait()
     }
 
     async snapBaseOwed(): Promise<BigNumber> {
