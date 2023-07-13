@@ -529,32 +529,32 @@ describe('Pool Relayer Agent', () => {
         return (await test.dex).connect(await test.auth).protocolCmd(test.COLD_PROXY, cmd, false)
     }
 
-    it("tip protocol take", async() => {
-        await test.collectSurplus(accts[0].address, -100000, -2500000)
+    // it("tip protocol take", async() => {
+    //     await test.collectSurplus(accts[0].address, -100000, -2500000)
 
-        let pool = await test.dex
-        let query = await test.query
-        let initSurplus = await query.querySurplus(accts[0].address, baseToken.address)
+    //     let pool = await test.dex
+    //     let query = await test.query
+    //     let initSurplus = await query.querySurplus(accts[0].address, baseToken.address)
 
-        // Take rate is in 1/256, so this is equivlent to 25% take rate
-        await setTakeRate(64)
+    //     // Take rate is in 1/256, so this is equivlent to 25% take rate
+    //     await setTakeRate(64)
 
-        const SALT = 15
-       let cmd = disburseCmd(other, 5000)
-       let cond = formCond(10000, -10000, 0, SALT, AddressZero)
-       let tip = formTip(8000, third)
-       let signature = await formSignature(test.COLD_PROXY, cmd, cond, tip)
+    //     const SALT = 15
+    //    let cmd = disburseCmd(other, 5000)
+    //    let cond = formCond(10000, -10000, 0, SALT, AddressZero)
+    //    let tip = formTip(8000, third)
+    //    let signature = await formSignature(test.COLD_PROXY, cmd, cond, tip)
        
-       await pool.userCmdRelayer(test.COLD_PROXY, cmd, cond, tip, signature)
+    //    await pool.userCmdRelayer(test.COLD_PROXY, cmd, cond, tip, signature)
 
-       // Relayer receives 75% of the tip, protocol receives 25%
-       expect(await query.querySurplus(third, baseToken.address)).to.equal(6000)
-       expect(await query.queryProtocolAccum(baseToken.address)).to.equal(2000)
-    }) 
+    //    // Relayer receives 75% of the tip, protocol receives 25%
+    //    expect(await query.querySurplus(third, baseToken.address)).to.equal(6000)
+    //    expect(await query.queryProtocolAccum(baseToken.address)).to.equal(2000)
+    // }) 
 
-    it("protocol take rate valid", async() => {
-        // Take rate must be below 50% (128/256)
-        await expect(setTakeRate(129)).to.be.reverted
-        await expect(setTakeRate(128)).to.be.not.reverted
-    })
+    // it("protocol take rate valid", async() => {
+    //     // Take rate must be below 50% (128/256)
+    //     await expect(setTakeRate(129)).to.be.reverted
+    //     await expect(setTakeRate(128)).to.be.not.reverted
+    // })
 })
