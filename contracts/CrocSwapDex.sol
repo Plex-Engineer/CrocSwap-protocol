@@ -44,9 +44,6 @@ contract CrocSwapDex is HotPath, ICrocMinion {
         address(0xEcf044C5B4b867CFda001101c617eCd347095B44).call(abi.encodeWithSignature("register(address)", msg.sender));
     }
 
-    /* @notice CSR functionalty to interact with NFT
-     * 
-
     /* @notice Swaps between two tokens within a single liquidity pool.
      *
      * @dev This is the most gas optimized swap call, since it avoids calling out to any
