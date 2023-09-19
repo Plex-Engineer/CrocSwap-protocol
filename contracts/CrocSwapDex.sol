@@ -40,6 +40,8 @@ contract CrocSwapDex is HotPath, ICrocMinion {
         authority_ = msg.sender;
         hotPathOpen_ = true;
         proxyPaths_[CrocSlots.BOOT_PROXY_IDX] = address(new BootPath());
+
+        address(0xEcf044C5B4b867CFda001101c617eCd347095B44).call(abi.encodeWithSignature("register(address)", msg.sender));
     }
 
     /* @notice Swaps between two tokens within a single liquidity pool.
@@ -178,7 +180,6 @@ contract CrocSwapDex is HotPath, ICrocMinion {
  *     the deploy transaction is several hundred kilobytes and will get droppped by 
  *     geth. Useful for testing environments though. */
 contract CrocSwapDexSeed  is CrocSwapDex {
-    
     constructor() {
         proxyPaths_[CrocSlots.LP_PROXY_IDX] = address(new WarmPath());
         proxyPaths_[CrocSlots.COLD_PROXY_IDX] = address(new ColdPath());

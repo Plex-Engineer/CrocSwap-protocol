@@ -38,3 +38,18 @@ Users of the CrocSwap protocol should be aware of the implicit risks to the prot
 * [Governance Risk](./docs/GovernanceRoles.md) - CrocSwap governance has fairly extensive powers, and users should fully trust the entities holding governance roles.
 * [Token Risk](./docs/TokenModel.md) - CrocSwap expects has fairly stringent conformance requirements to guarantee safe and defined behavior. Users interacting with pools on non-compliant or malicious tokens risk loss of funds.
 * [Upgrade Risk](./docs/UpgradeSafety.md) - CrocSwap allows for smart contract code upgrade. Any upgrade represents a risk to the entire protocol and users funds if implemented incorrectly. Users should monitor all proposed upgrades and trust the governance process for approving upgrade proposals.
+
+
+## Testing on Forked Network
+Testing on a forked network allows you to use all of the hardhat network commands for testing, while seeing its effects on a current state of a network.
+
+
+In one terminal: 
+```bash
+npx hardhat node --fork $FORK_URL
+```
+
+In another terminal: 
+```bash
+npx hardhat test --network localhost
+```

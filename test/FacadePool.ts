@@ -13,7 +13,6 @@ import { MockPermit } from '../typechain/MockPermit';
 import { QueryHelper } from '../typechain/QueryHelper';
 import { TestSettleLayer } from "../typechain/TestSettleLayer";
 import { CrocQuery } from "../typechain/CrocQuery";
-import { BootPath } from "../contracts/typechain";
 
 chai.use(solidity);
 
@@ -175,7 +174,7 @@ export class TestPool {
         this.liqBase = true
         this.initTemplBefore = true
 
-        factory = ethers.getContractFactory("CrocSwapDexSeed")
+        factory = ethers.getContractFactory("CrocSwapDex")
         if (dex) {
             this.dex = Promise.resolve(dex)
         } else {
@@ -200,7 +199,41 @@ export class TestPool {
             { value: BigNumber.from(1000000000).mul(1000000000) } : { }
     }
 
+    async initDex() {
+        const factories = await Promise.all([
+            ethers.getContractFactory("WarmPath"),
+            ethers.getContractFactory("ColdPath"),
+            ethers.getContractFactory("LongPath"),
+            ethers.getContractFactory("MicroPaths"),
+            ethers.getContractFactory("KnockoutFlagPath"),
+            ethers.getContractFactory("KnockoutLiqPath"),
+            ethers.getContractFactory("SafeModePath")
+        ])
+        const [
+            warmPath,
+            coldPath,
+            longPath,
+            microPath,
+            knockoutFlagPath,
+            kockoutLiqPath,
+            safeModePath
+        ] = await Promise.all(factories.map(async (f) => (await (f.connect(await this.auth).deploy())).deployed()))
+        
+    
+        // upgrade each sidecar
+        await Promise.all([
+          await (await this.testUpgrade(2, warmPath.address)).wait(),
+          await (await this.testUpgrade(3, coldPath.address)).wait(),
+          await (await this.testUpgrade(4, longPath.address)).wait(),
+          await (await this.testUpgrade(5, microPath.address)).wait(),
+          await (await this.testUpgrade(3500, knockoutFlagPath.address)).wait(),
+          await (await this.testUpgrade(7, kockoutLiqPath.address)).wait(),
+          await (await this.testUpgrade(9999, safeModePath.address)).wait(),
+        ]);
+    }
+
     async fundTokens (bal: BigNumberish = INIT_BAL) {
+        await this.initDex()
         await this.base.fund(await this.trader, (await this.dex).address, bal)
         await this.quote.fund(await this.trader, (await this.dex).address, bal)
         await this.base.fund(await this.other, (await this.dex).address, bal)
@@ -600,11 +633,11 @@ export class TestPool {
 
         if (protoTake > 0) {
             let takeCmd = abiCoder.encode(["uint8", "uint8"], [114, protoTake]);
-            (await this.dex).connect(await this.auth).protocolCmd(this.COLD_PROXY, takeCmd, false)
+            await (await ((await this.dex).connect(await this.auth).protocolCmd(this.COLD_PROXY, takeCmd, false))).wait()
 
             takeCmd = abiCoder.encode(["uint8", "address", "address", "uint256"],
                 [115, (await this.base).address, (await this.quote).address, idx]);
-            (await this.dex).connect(await this.auth).protocolCmd(this.COLD_PROXY, takeCmd, false)              
+            await (await ((await this.dex).connect(await this.auth).protocolCmd(this.COLD_PROXY, takeCmd, false))).wait()              
         }
 
         let cmd = abiCoder.encode(["uint8", "address", "address", "uint256", "uint16", "uint16", "uint8", "uint8"],
@@ -757,8 +790,8 @@ export class TestPool {
     }
 
     async collectSurplus (recv: string, base: number | BigNumber, quote: number | BigNumber) {
-        await this.testCollectSurplus(await this.trader, recv, base, (await this.base).address, false)
-        await this.testCollectSurplus(await this.trader, recv, quote, (await this.quote).address, false)
+        await (await this.testCollectSurplus(await this.trader, recv, base, (await this.base).address, false)).wait()
+        await (await this.testCollectSurplus(await this.trader, recv, quote, (await this.quote).address, false)).wait()
     }
 
     async snapBaseOwed(): Promise<BigNumber> {

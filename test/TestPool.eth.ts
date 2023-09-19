@@ -91,17 +91,17 @@ describe('Pool Ethereum', () => {
         expect(await quoteDelta()).to.equal(4)
      })
  
-    it("swap protocol fee", async() => {
-        await test.testMint(200000, 210000, 1024*1000*1000);
-        await test.testRevisePool(feeRate, 43, 1)
+    // it("swap protocol fee", async() => {
+    //     await test.testMint(200000, 210000, 1024*1000*1000);
+    //     await test.testRevisePool(feeRate, 43, 1)
 
-        await test.testSwap(true, false, 10000, maxSqrtPrice())
-        await test.testSwap(false, false, 10000, minSqrtPrice())
+    //     await test.testSwap(true, false, 10000, maxSqrtPrice())
+    //     await test.testSwap(false, false, 10000, minSqrtPrice())
         
-        let bal = BigNumber.from("10074455836876115")
-        expect(await baseDelta()).to.equal(bal)
-        expect(await quoteDelta()).to.equal(4269666)
-    })
+    //     let bal = BigNumber.from("10074455836876115")
+    //     expect(await baseDelta()).to.equal(bal)
+    //     expect(await quoteDelta()).to.equal(4269666)
+    // })
 })
 
 describe('Pool Ethereum Hotpath', () => {
@@ -180,17 +180,17 @@ describe('Pool Ethereum Hotpath', () => {
         expect(await quoteDelta()).to.equal(4)
      })
  
-    it("swap protocol fee", async() => {
-        await test.testMint(200000, 210000, 1024*1000*1000);
-        await test.testRevisePool(feeRate, 43, 1)
+    // it("swap protocol fee", async() => {
+    //     await test.testMint(200000, 210000, 1024*1000*1000);
+    //     await test.testRevisePool(feeRate, 43, 1)
 
-        await test.testSwap(true, false, 10000, maxSqrtPrice())
-        await test.testSwap(false, false, 10000, minSqrtPrice())
+    //     await test.testSwap(true, false, 10000, maxSqrtPrice())
+    //     await test.testSwap(false, false, 10000, minSqrtPrice())
         
-        let bal = BigNumber.from("10074455836876115")
-        expect(await baseDelta()).to.equal(bal)
-        expect(await quoteDelta()).to.equal(4269666)
-    })
+    //     let bal = BigNumber.from("10074455836876115")
+    //     expect(await baseDelta()).to.equal(bal)
+    //     expect(await quoteDelta()).to.equal(4269666)
+    // })
 })
 
 

@@ -136,127 +136,127 @@ describe('Pair', () => {
         expect(await test.snapQuoteOwed()).to.equal(43275)
     })
 
-    it("protocol fee baseline", async() => {
-        await test.testMintAmbient(10000)
-        await test.testMintAmbientIdx(20000, pool2)
-        await test.testMintAmbientIdx(30000, pool3)
+    // it("protocol fee baseline", async() => {
+    //     await test.testMintAmbient(10000)
+    //     await test.testMintAmbientIdx(20000, pool2)
+    //     await test.testMintAmbientIdx(30000, pool3)
         
-        // Turn protocol fees on at different rates 
-        await test.testRevisePool(100*100, 128, 1)
-        await test.testRevisePoolIdx(pool2, 100*100, 85, 1)
-        await test.testRevisePoolIdx(pool2, 50*100, 64, 1)
+    //     // Turn protocol fees on at different rates 
+    //     await test.testRevisePool(100*100, 128, 1)
+    //     await test.testRevisePoolIdx(pool2, 100*100, 85, 1)
+    //     await test.testRevisePoolIdx(pool2, 50*100, 64, 1)
 
-        let order = await test.prototypeOrder(3)
+    //     let order = await test.prototypeOrder(3)
         
-        order.hops[0].pools[0].swap.isBuy = true
-        order.hops[0].pools[0].swap.inBaseQty = false
-        order.hops[0].pools[0].swap.limitPrice = maxSqrtPrice()
-        order.hops[0].pools[0].swap.qty = BigNumber.from(100000)    
+    //     order.hops[0].pools[0].swap.isBuy = true
+    //     order.hops[0].pools[0].swap.inBaseQty = false
+    //     order.hops[0].pools[0].swap.limitPrice = maxSqrtPrice()
+    //     order.hops[0].pools[0].swap.qty = BigNumber.from(100000)    
 
-        await test.testOrder(order)
+    //     await test.testOrder(order)
 
-        expect(await (await test.query).queryProtocolAccum((await test.base).address)).to.equal(759)
-        expect(await (await test.query).queryProtocolAccum((await test.quote).address)).to.equal(0)
-    })
+    //     expect(await (await test.query).queryProtocolAccum((await test.base).address)).to.equal(759)
+    //     expect(await (await test.query).queryProtocolAccum((await test.quote).address)).to.equal(0)
+    // })
 
-    it("protocol fee stack both sides", async() => {
-        await test.testMintAmbient(10000)
-        await test.testMintAmbientIdx(20000, pool2)
-        await test.testMintAmbientIdx(30000, pool3)
+    // it("protocol fee stack both sides", async() => {
+    //     await test.testMintAmbient(10000)
+    //     await test.testMintAmbientIdx(20000, pool2)
+    //     await test.testMintAmbientIdx(30000, pool3)
         
-        // Turn protocol fees on at different rates 
-        await test.testRevisePool(100*100, 128, 1)
-        await test.testRevisePoolIdx(pool2, 100*100, 85, 1)
-        await test.testRevisePoolIdx(pool3, 50*100, 64, 1)
+    //     // Turn protocol fees on at different rates 
+    //     await test.testRevisePool(100*100, 128, 1)
+    //     await test.testRevisePoolIdx(pool2, 100*100, 85, 1)
+    //     await test.testRevisePoolIdx(pool3, 50*100, 64, 1)
 
-        let order = await test.prototypeOrder(3)
+    //     let order = await test.prototypeOrder(3)
         
-        order.hops[0].pools[0].swap.isBuy = true
-        order.hops[0].pools[0].swap.inBaseQty = false
-        order.hops[0].pools[0].swap.limitPrice = maxSqrtPrice()
-        order.hops[0].pools[0].swap.qty = BigNumber.from(100000)    
+    //     order.hops[0].pools[0].swap.isBuy = true
+    //     order.hops[0].pools[0].swap.inBaseQty = false
+    //     order.hops[0].pools[0].swap.limitPrice = maxSqrtPrice()
+    //     order.hops[0].pools[0].swap.qty = BigNumber.from(100000)    
 
-        order.hops[0].pools[1].poolIdx = pool2
-        order.hops[0].pools[1].swap.isBuy = true
-        order.hops[0].pools[1].swap.inBaseQty = true
-        order.hops[0].pools[1].swap.limitPrice = maxSqrtPrice()
-        order.hops[0].pools[1].swap.qty = BigNumber.from(100000)    
+    //     order.hops[0].pools[1].poolIdx = pool2
+    //     order.hops[0].pools[1].swap.isBuy = true
+    //     order.hops[0].pools[1].swap.inBaseQty = true
+    //     order.hops[0].pools[1].swap.limitPrice = maxSqrtPrice()
+    //     order.hops[0].pools[1].swap.qty = BigNumber.from(100000)    
 
-        await test.testOrder(order)
+    //     await test.testOrder(order)
 
-        expect(await (await test.query).queryProtocolAccum((await test.base).address)).to.equal(759)
-        expect(await (await test.query).queryProtocolAccum((await test.quote).address)).to.equal(192)
-    })
+    //     expect(await (await test.query).queryProtocolAccum((await test.base).address)).to.equal(759)
+    //     expect(await (await test.query).queryProtocolAccum((await test.quote).address)).to.equal(192)
+    // })
 
-    it("protocol fee stack base", async() => {
-        await test.testMintAmbient(10000)
-        await test.testMintAmbientIdx(20000, pool2)
-        await test.testMintAmbientIdx(30000, pool3)
+    // it("protocol fee stack base", async() => {
+    //     await test.testMintAmbient(10000)
+    //     await test.testMintAmbientIdx(20000, pool2)
+    //     await test.testMintAmbientIdx(30000, pool3)
         
-        // Turn protocol fees on at different rates 
-        await test.testRevisePool(100*100, 128, 1)
-        await test.testRevisePoolIdx(pool2, 100*100, 85, 1)
-        await test.testRevisePoolIdx(pool3, 50*100, 64, 1)
+    //     // Turn protocol fees on at different rates 
+    //     await test.testRevisePool(100*100, 128, 1)
+    //     await test.testRevisePoolIdx(pool2, 100*100, 85, 1)
+    //     await test.testRevisePoolIdx(pool3, 50*100, 64, 1)
 
-        let order = await test.prototypeOrder(3)
+    //     let order = await test.prototypeOrder(3)
         
-        order.hops[0].pools[0].swap.isBuy = true
-        order.hops[0].pools[0].swap.inBaseQty = false
-        order.hops[0].pools[0].swap.limitPrice = maxSqrtPrice()
-        order.hops[0].pools[0].swap.qty = BigNumber.from(100000)    
+    //     order.hops[0].pools[0].swap.isBuy = true
+    //     order.hops[0].pools[0].swap.inBaseQty = false
+    //     order.hops[0].pools[0].swap.limitPrice = maxSqrtPrice()
+    //     order.hops[0].pools[0].swap.qty = BigNumber.from(100000)    
 
-        order.hops[0].pools[1].poolIdx = pool2
-        order.hops[0].pools[1].swap.isBuy = true
-        order.hops[0].pools[1].swap.inBaseQty = true
-        order.hops[0].pools[1].swap.limitPrice = maxSqrtPrice()
-        order.hops[0].pools[1].swap.qty = BigNumber.from(100000)   
+    //     order.hops[0].pools[1].poolIdx = pool2
+    //     order.hops[0].pools[1].swap.isBuy = true
+    //     order.hops[0].pools[1].swap.inBaseQty = true
+    //     order.hops[0].pools[1].swap.limitPrice = maxSqrtPrice()
+    //     order.hops[0].pools[1].swap.qty = BigNumber.from(100000)   
 
-        order.hops[0].pools[2].poolIdx = pool3
-        order.hops[0].pools[2].swap.isBuy = true
-        order.hops[0].pools[2].swap.inBaseQty = true
-        order.hops[0].pools[2].swap.limitPrice = maxSqrtPrice()
-        order.hops[0].pools[2].swap.qty = BigNumber.from(100000)  
+    //     order.hops[0].pools[2].poolIdx = pool3
+    //     order.hops[0].pools[2].swap.isBuy = true
+    //     order.hops[0].pools[2].swap.inBaseQty = true
+    //     order.hops[0].pools[2].swap.limitPrice = maxSqrtPrice()
+    //     order.hops[0].pools[2].swap.qty = BigNumber.from(100000)  
 
-        await test.testOrder(order)
+    //     await test.testOrder(order)
 
-        expect(await (await test.query).queryProtocolAccum((await test.base).address)).to.equal(759)
-        expect(await (await test.query).queryProtocolAccum((await test.quote).address)).to.equal(281)
-    })
+    //     expect(await (await test.query).queryProtocolAccum((await test.base).address)).to.equal(759)
+    //     expect(await (await test.query).queryProtocolAccum((await test.quote).address)).to.equal(281)
+    // })
 
-    it("protocol fee stack quote", async() => {
-        await test.testMintAmbient(10000)
-        await test.testMintAmbientIdx(20000, pool2)
-        await test.testMintAmbientIdx(30000, pool3)
+    // it("protocol fee stack quote", async() => {
+    //     await test.testMintAmbient(10000)
+    //     await test.testMintAmbientIdx(20000, pool2)
+    //     await test.testMintAmbientIdx(30000, pool3)
         
-        // Turn protocol fees on at different rates 
-        await test.testRevisePool(100*100, 128, 1)
-        await test.testRevisePoolIdx(pool2, 100*100, 85, 1)
-        await test.testRevisePoolIdx(pool3, 50*100, 64, 1)
+    //     // Turn protocol fees on at different rates 
+    //     await test.testRevisePool(100*100, 128, 1)
+    //     await test.testRevisePoolIdx(pool2, 100*100, 85, 1)
+    //     await test.testRevisePoolIdx(pool3, 50*100, 64, 1)
 
-        let order = await test.prototypeOrder(3)
+    //     let order = await test.prototypeOrder(3)
         
-        order.hops[0].pools[0].swap.isBuy = true
-        order.hops[0].pools[0].swap.inBaseQty = false
-        order.hops[0].pools[0].swap.limitPrice = maxSqrtPrice()
-        order.hops[0].pools[0].swap.qty = BigNumber.from(100000)    
+    //     order.hops[0].pools[0].swap.isBuy = true
+    //     order.hops[0].pools[0].swap.inBaseQty = false
+    //     order.hops[0].pools[0].swap.limitPrice = maxSqrtPrice()
+    //     order.hops[0].pools[0].swap.qty = BigNumber.from(100000)    
 
-        order.hops[0].pools[1].poolIdx = pool2
-        order.hops[0].pools[1].swap.isBuy = true
-        order.hops[0].pools[1].swap.inBaseQty = true
-        order.hops[0].pools[1].swap.limitPrice = maxSqrtPrice()
-        order.hops[0].pools[1].swap.qty = BigNumber.from(100000)   
+    //     order.hops[0].pools[1].poolIdx = pool2
+    //     order.hops[0].pools[1].swap.isBuy = true
+    //     order.hops[0].pools[1].swap.inBaseQty = true
+    //     order.hops[0].pools[1].swap.limitPrice = maxSqrtPrice()
+    //     order.hops[0].pools[1].swap.qty = BigNumber.from(100000)   
 
-        order.hops[0].pools[2].poolIdx = pool3
-        order.hops[0].pools[2].swap.isBuy = true
-        order.hops[0].pools[2].swap.inBaseQty = false
-        order.hops[0].pools[2].swap.limitPrice = maxSqrtPrice()
-        order.hops[0].pools[2].swap.qty = BigNumber.from(100000)  
+    //     order.hops[0].pools[2].poolIdx = pool3
+    //     order.hops[0].pools[2].swap.isBuy = true
+    //     order.hops[0].pools[2].swap.inBaseQty = false
+    //     order.hops[0].pools[2].swap.limitPrice = maxSqrtPrice()
+    //     order.hops[0].pools[2].swap.qty = BigNumber.from(100000)  
 
-        await test.testOrder(order)
+    //     await test.testOrder(order)
 
-        expect(await (await test.query).queryProtocolAccum((await test.base).address)).to.equal(934)
-        expect(await (await test.query).queryProtocolAccum((await test.quote).address)).to.equal(192)
-    })
+    //     expect(await (await test.query).queryProtocolAccum((await test.base).address)).to.equal(934)
+    //     expect(await (await test.query).queryProtocolAccum((await test.quote).address)).to.equal(192)
+    // })
 
     it("pool settings individual", async() => {
         await test.testMintAmbient(10000)

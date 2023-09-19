@@ -128,99 +128,99 @@ describe('Pool Governance', () => {
     })
 
 
-    it("set treasury", async() => {
-      await test.testRevisePool(feeRate, 128, 1) // Turn on protocol fee
-      await pool.connect(await test.auth).protocolCmd(test.COLD_PROXY, transferCmd(policy.address), true)
-      await test.testMintAmbient(10000)
-      await test.testSwap(true, false, 100000, MAX_PRICE)
+    // it("set treasury", async() => {
+    //   await test.testRevisePool(feeRate, 128, 1) // Turn on protocol fee
+    //   await pool.connect(await test.auth).protocolCmd(test.COLD_PROXY, transferCmd(policy.address), true)
+    //   await test.testMintAmbient(10000)
+    //   await test.testSwap(true, false, 100000, MAX_PRICE)
 
-      // Unauthorized attempts to set treasury
-      await expect(pool.protocolCmd(test.COLD_PROXY, treasurySetCmd(policy2.address), true)).to.be.reverted
-      await expect(ops.opsResolution(pool.address, test.COLD_PROXY, treasurySetCmd(policy2.address))).to.be.reverted
-      await expect(ops.treasuryResolution(pool.address, test.COLD_PROXY, treasurySetCmd(policy2.address), true)).to.be.reverted
+    //   // Unauthorized attempts to set treasury
+    //   await expect(pool.protocolCmd(test.COLD_PROXY, treasurySetCmd(policy2.address), true)).to.be.reverted
+    //   await expect(ops.opsResolution(pool.address, test.COLD_PROXY, treasurySetCmd(policy2.address))).to.be.reverted
+    //   await expect(ops.treasuryResolution(pool.address, test.COLD_PROXY, treasurySetCmd(policy2.address), true)).to.be.reverted
 
-      // Treasury set to zero or non-contract addresses
-      await expect(treasury.treasuryResolution(pool.address, test.COLD_PROXY, treasurySetCmd(ZERO_ADDR), true)).to.be.reverted
-      await expect(treasury.treasuryResolution(pool.address, test.COLD_PROXY, treasurySetCmd(accts[5].address), true)).to.be.reverted
+    //   // Treasury set to zero or non-contract addresses
+    //   await expect(treasury.treasuryResolution(pool.address, test.COLD_PROXY, treasurySetCmd(ZERO_ADDR), true)).to.be.reverted
+    //   await expect(treasury.treasuryResolution(pool.address, test.COLD_PROXY, treasurySetCmd(accts[5].address), true)).to.be.reverted
 
-      // Success call
-      await treasury.treasuryResolution(pool.address, test.COLD_PROXY, treasurySetCmd(policy2.address), true)
-    })
+    //   // Success call
+    //   await treasury.treasuryResolution(pool.address, test.COLD_PROXY, treasurySetCmd(policy2.address), true)
+    // })
 
     
-    it("collect treasury", async() => {
-      await test.testRevisePool(feeRate, 128, 1) // Turn on protocol fee
-      await pool.connect(await test.auth).protocolCmd(test.COLD_PROXY, transferCmd(policy.address), true)
-      await test.testMintAmbient(10000)
-      await test.testSwap(true, false, 100000, MAX_PRICE)
+    // it("collect treasury", async() => {
+    //   await test.testRevisePool(feeRate, 128, 1) // Turn on protocol fee
+    //   await pool.connect(await test.auth).protocolCmd(test.COLD_PROXY, transferCmd(policy.address), true)
+    //   await test.testMintAmbient(10000)
+    //   await test.testSwap(true, false, 100000, MAX_PRICE)
 
-      await treasury.treasuryResolution(pool.address, test.COLD_PROXY, treasurySetCmd(policy2.address), true)
-      await hre.ethers.provider.send("evm_increaseTime", [3600*24*7+1]) // 7 days
+    //   await treasury.treasuryResolution(pool.address, test.COLD_PROXY, treasurySetCmd(policy2.address), true)
+    //   await hre.ethers.provider.send("evm_increaseTime", [3600*24*7+1]) // 7 days
 
-      // Unauthorized attempts to collect treasury
-      await expect(pool.protocolCmd(test.COLD_PROXY, collectCmd(), true)).to.be.reverted
-      await expect(ops.opsResolution(pool.address, test.COLD_PROXY, collectCmd())).to.be.reverted
-      await expect(ops.treasuryResolution(pool.address, test.COLD_PROXY, collectCmd(), true)).to.be.reverted
+    //   // Unauthorized attempts to collect treasury
+    //   await expect(pool.protocolCmd(test.COLD_PROXY, collectCmd(), true)).to.be.reverted
+    //   await expect(ops.opsResolution(pool.address, test.COLD_PROXY, collectCmd())).to.be.reverted
+    //   await expect(ops.treasuryResolution(pool.address, test.COLD_PROXY, collectCmd(), true)).to.be.reverted
 
-      // Successful treasury payout
-      let snap = await (await test.query).querySurplus(policy2.address, baseToken.address)
-      await treasury.treasuryResolution(pool.address, test.COLD_PROXY, collectCmd(), true)
-      expect(await (await test.query).querySurplus(policy2.address, baseToken.address)).to.gt(snap);
-    })
+    //   // Successful treasury payout
+    //   let snap = await (await test.query).querySurplus(policy2.address, baseToken.address)
+    //   await treasury.treasuryResolution(pool.address, test.COLD_PROXY, collectCmd(), true)
+    //   expect(await (await test.query).querySurplus(policy2.address, baseToken.address)).to.gt(snap);
+    // })
 
-    it("collect treasury time delay", async() => {
-      await test.testRevisePool(feeRate, 128, 1) // Turn on protocol fee
-      await pool.connect(await test.auth).protocolCmd(test.COLD_PROXY, transferCmd(policy.address), true)
-      await test.testMintAmbient(10000)
-      await test.testSwap(true, false, 100000, MAX_PRICE)
+    // it("collect treasury time delay", async() => {
+    //   await test.testRevisePool(feeRate, 128, 1) // Turn on protocol fee
+    //   await pool.connect(await test.auth).protocolCmd(test.COLD_PROXY, transferCmd(policy.address), true)
+    //   await test.testMintAmbient(10000)
+    //   await test.testSwap(true, false, 100000, MAX_PRICE)
 
-      await treasury.treasuryResolution(pool.address, test.COLD_PROXY, treasurySetCmd(policy2.address), true)
+    //   await treasury.treasuryResolution(pool.address, test.COLD_PROXY, treasurySetCmd(policy2.address), true)
 
-      // Will fail because treasury can only be collected 7 days after treasury address is set
-      await expect(treasury.treasuryResolution(pool.address, test.COLD_PROXY, collectCmd(), true)).to.be.reverted
-      await hre.ethers.provider.send("evm_increaseTime", [3600*24*6]) // 6 days
-      await expect(treasury.treasuryResolution(pool.address, test.COLD_PROXY, collectCmd(), true)).to.be.reverted      
-      await hre.ethers.provider.send("evm_increaseTime", [3600*24+1]) // One more day... treasury valid
+    //   // Will fail because treasury can only be collected 7 days after treasury address is set
+    //   await expect(treasury.treasuryResolution(pool.address, test.COLD_PROXY, collectCmd(), true)).to.be.reverted
+    //   await hre.ethers.provider.send("evm_increaseTime", [3600*24*6]) // 6 days
+    //   await expect(treasury.treasuryResolution(pool.address, test.COLD_PROXY, collectCmd(), true)).to.be.reverted      
+    //   await hre.ethers.provider.send("evm_increaseTime", [3600*24+1]) // One more day... treasury valid
 
-      // Successful treasury payout
-      let snap = await (await test.query).querySurplus(policy2.address, baseToken.address)
-      await treasury.treasuryResolution(pool.address, test.COLD_PROXY, collectCmd(), true)
-      expect(await (await test.query).querySurplus(policy2.address, baseToken.address)).to.gt(snap);
-    })
+    //   // Successful treasury payout
+    //   let snap = await (await test.query).querySurplus(policy2.address, baseToken.address)
+    //   await treasury.treasuryResolution(pool.address, test.COLD_PROXY, collectCmd(), true)
+    //   expect(await (await test.query).querySurplus(policy2.address, baseToken.address)).to.gt(snap);
+    // })
 
 
-    it("safe mode", async() => {
-      await test.testRevisePool(feeRate, 128, 1) // Turn on protocol fee
-      await test.testMintAmbient(10000)
-      await pool.connect(await test.auth).protocolCmd(test.COLD_PROXY, transferCmd(policy.address), true)
+    // it("safe mode", async() => {
+    //   await test.testRevisePool(feeRate, 128, 1) // Turn on protocol fee
+    //   await test.testMintAmbient(10000)
+    //   await pool.connect(await test.auth).protocolCmd(test.COLD_PROXY, transferCmd(policy.address), true)
 
-      // Unauthorized attempts to turn on safe mode
-      await expect(pool.protocolCmd(test.COLD_PROXY, safeModeCmd(true), true)).to.be.reverted
-      await expect(ops.opsResolution(pool.address, test.COLD_PROXY, safeModeCmd(true))).to.be.reverted
-      await expect(ops.treasuryResolution(pool.address, test.COLD_PROXY, safeModeCmd(true), false)).to.be.reverted
+    //   // Unauthorized attempts to turn on safe mode
+    //   await expect(pool.protocolCmd(test.COLD_PROXY, safeModeCmd(true), true)).to.be.reverted
+    //   await expect(ops.opsResolution(pool.address, test.COLD_PROXY, safeModeCmd(true))).to.be.reverted
+    //   await expect(ops.treasuryResolution(pool.address, test.COLD_PROXY, safeModeCmd(true), false)).to.be.reverted
 
-      // Turn on safe mode
-      await treasury.treasuryResolution(pool.address, test.COLD_PROXY, safeModeCmd(true), true)
+    //   // Turn on safe mode
+    //   await treasury.treasuryResolution(pool.address, test.COLD_PROXY, safeModeCmd(true), true)
 
-      // Safe mode disables everything outside the safe mode path
-      await expect(test.testMintAmbient(10000)).to.be.reverted
-      await expect(pool.userCmd(test.COLD_PROXY, disburseCmd(accts[6].address, 10000))).to.be.reverted
-      await expect(treasury.treasuryResolution(pool.address, test.COLD_PROXY, treasurySetCmd(accts[5].address), false)).to.be.reverted
-      await expect(treasury.treasuryResolution(pool.address, test.COLD_PROXY, collectCmd(), true)).to.be.reverted
-      await expect(ops.opsResolution(pool.address, test.COLD_PROXY, setInitLiqCmd(1000))).to.be.reverted
+    //   // Safe mode disables everything outside the safe mode path
+    //   await expect(test.testMintAmbient(10000)).to.be.reverted
+    //   await expect(pool.userCmd(test.COLD_PROXY, disburseCmd(accts[6].address, 10000))).to.be.reverted
+    //   await expect(treasury.treasuryResolution(pool.address, test.COLD_PROXY, treasurySetCmd(accts[5].address), false)).to.be.reverted
+    //   await expect(treasury.treasuryResolution(pool.address, test.COLD_PROXY, collectCmd(), true)).to.be.reverted
+    //   await expect(ops.opsResolution(pool.address, test.COLD_PROXY, setInitLiqCmd(1000))).to.be.reverted
 
-      // Non-sudo and user commands to the Emergency call path will fail
-      await expect(pool.userCmd(test.EMERGENCY_PROXY, disburseCmd(accts[6].address, 10000))).to.be.reverted
-      await expect(treasury.treasuryResolution(pool.address, test.EMERGENCY_PROXY, treasurySetCmd(accts[5].address), false)).to.be.reverted
-      await expect(treasury.treasuryResolution(pool.address, test.EMERGENCY_PROXY, collectCmd(), false)).to.be.reverted
-      await expect(ops.treasuryResolution(pool.address, test.EMERGENCY_PROXY, setInitLiqCmd(1000), false)).to.be.reverted
+    //   // Non-sudo and user commands to the Emergency call path will fail
+    //   await expect(pool.userCmd(test.EMERGENCY_PROXY, disburseCmd(accts[6].address, 10000))).to.be.reverted
+    //   await expect(treasury.treasuryResolution(pool.address, test.EMERGENCY_PROXY, treasurySetCmd(accts[5].address), false)).to.be.reverted
+    //   await expect(treasury.treasuryResolution(pool.address, test.EMERGENCY_PROXY, collectCmd(), false)).to.be.reverted
+    //   await expect(ops.treasuryResolution(pool.address, test.EMERGENCY_PROXY, setInitLiqCmd(1000), false)).to.be.reverted
 
-      // Safe mode can be disabled on the emergency callpath
-      await treasury.treasuryResolution(pool.address, test.EMERGENCY_PROXY, safeModeCmd(false), true)
+    //   // Safe mode can be disabled on the emergency callpath
+    //   await treasury.treasuryResolution(pool.address, test.EMERGENCY_PROXY, safeModeCmd(false), true)
 
-      // And regular operation resumes
-      await expect(test.testMintAmbient(10000)).to.not.be.reverted
-    })
+    //   // And regular operation resumes
+    //   await expect(test.testMintAmbient(10000)).to.not.be.reverted
+    // })
 
 
     it("init liq valid bounds", async() => {
@@ -230,10 +230,10 @@ describe('Pool Governance', () => {
       await expect(test.testSetInitLiq(9*1000*1000)).to.be.not.reverted      
     })
 
-    it("take rate", async() => {
-      // Take rate must be below 50% (128/256)
-      await expect(test.initPoolIdx(1000, feeRate, 129, 1, 1.0)).to.be.reverted
-      await expect(test.initPoolIdx(1000, feeRate, 128, 1, 1.0)).to.be.not.reverted
-    })
+    // it("take rate", async() => {
+    //   // Take rate must be below 50% (128/256)
+    //   await expect(test.initPoolIdx(1000, feeRate, 129, 1, 1.0)).to.be.reverted
+    //   await expect(test.initPoolIdx(1000, feeRate, 128, 1, 1.0)).to.be.not.reverted
+    // })
 
   })

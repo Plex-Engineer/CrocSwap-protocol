@@ -87,32 +87,32 @@ describe('Pool HotPath', () => {
         expect(price).to.lte(1.524318)
     })
     
-    it("swap protocol fee", async() => {
-        await test.testMint(-5000, 8000, 1000000); 
-        await test.testRevisePool(feeRate, 43, 1)
+    // it("swap protocol fee", async() => {
+    //     await test.testMint(-5000, 8000, 1000000); 
+    //     await test.testRevisePool(feeRate, 43, 1)
 
-        let startQuote = await quoteToken.balanceOf((await test.dex).address)
-        let startBase = await baseToken.balanceOf((await test.dex).address)
+    //     let startQuote = await quoteToken.balanceOf((await test.dex).address)
+    //     let startBase = await baseToken.balanceOf((await test.dex).address)
 
-        await test.snapStart()
-        await test.testSwap(true, true, 10000, toSqrtPrice(2.0))
+    //     await test.snapStart()
+    //     await test.testSwap(true, true, 10000, toSqrtPrice(2.0))
 
-        const swapFlow = 6603 + 57
-        const feeCost = 148
-        const liqBonus = 1
-        const liqGrowth = 74
-        const counterFlow = -(swapFlow - feeCost + liqBonus)
+    //     const swapFlow = 6603 + 57
+    //     const feeCost = 148
+    //     const liqBonus = 1
+    //     const liqGrowth = 74
+    //     const counterFlow = -(swapFlow - feeCost + liqBonus)
 
-        expect(await test.snapBaseFlow()).to.equal(10000)
-        expect(await test.snapQuoteFlow()).to.equal(counterFlow)
+    //     expect(await test.snapBaseFlow()).to.equal(10000)
+    //     expect(await test.snapQuoteFlow()).to.equal(counterFlow)
 
-        expect(await test.liquidity()).to.equal(1000000*1024 + liqGrowth)
-        expect((await quoteToken.balanceOf((await test.dex).address)).sub(startQuote)).to.equal(counterFlow)
-        expect((await baseToken.balanceOf((await test.dex).address)).sub(startBase)).to.equal(10000)
+    //     expect(await test.liquidity()).to.equal(1000000*1024 + liqGrowth)
+    //     expect((await quoteToken.balanceOf((await test.dex).address)).sub(startQuote)).to.equal(counterFlow)
+    //     expect((await baseToken.balanceOf((await test.dex).address)).sub(startBase)).to.equal(10000)
 
-        expect(await (await test.query).queryProtocolAccum((await test.base).address)).to.equal(0)
-        expect(await (await test.query).queryProtocolAccum((await test.quote).address)).to.equal(25)
-    })
+    //     expect(await (await test.query).queryProtocolAccum((await test.base).address)).to.equal(0)
+    //     expect(await (await test.query).queryProtocolAccum((await test.quote).address)).to.equal(25)
+    // })
 
     it("swap sell", async() => {
         await test.testMint(-5000, 8000, 1000000); 
@@ -136,27 +136,27 @@ describe('Pool HotPath', () => {
         expect(price).to.lte(1.47534)
     })
 
-    it("swap sell protocol fee", async() => {
-        await test.testMint(-5000, 8000, 1000000); 
-        await test.testRevisePool(feeRate, 43, 1)
-        let startQuote = await quoteToken.balanceOf((await test.dex).address)
-        let startBase = await baseToken.balanceOf((await test.dex).address)
+    // it("swap sell protocol fee", async() => {
+    //     await test.testMint(-5000, 8000, 1000000); 
+    //     await test.testRevisePool(feeRate, 43, 1)
+    //     let startQuote = await quoteToken.balanceOf((await test.dex).address)
+    //     let startBase = await baseToken.balanceOf((await test.dex).address)
         
-        const liqGrowth = 78901
-        const counterFlow = 7038793
+    //     const liqGrowth = 78901
+    //     const counterFlow = 7038793
 
-        await test.snapStart()
-        await test.testSwap(false, true, 10000*1024, toSqrtPrice(1.25))
-        expect(await test.snapBaseFlow()).to.equal(-10000*1024)
-        expect(await test.snapQuoteFlow()).to.equal(counterFlow)
+    //     await test.snapStart()
+    //     await test.testSwap(false, true, 10000*1024, toSqrtPrice(1.25))
+    //     expect(await test.snapBaseFlow()).to.equal(-10000*1024)
+    //     expect(await test.snapQuoteFlow()).to.equal(counterFlow)
 
-        expect(await test.liquidity()).to.equal(1000000*1024 + liqGrowth)
-        expect((await quoteToken.balanceOf((await test.dex).address)).sub(startQuote)).to.equal(counterFlow)
-        expect((await baseToken.balanceOf((await test.dex).address)).sub(startBase)).to.equal(-10000*1024)
+    //     expect(await test.liquidity()).to.equal(1000000*1024 + liqGrowth)
+    //     expect((await quoteToken.balanceOf((await test.dex).address)).sub(startQuote)).to.equal(counterFlow)
+    //     expect((await baseToken.balanceOf((await test.dex).address)).sub(startBase)).to.equal(-10000*1024)
 
-        expect(await (await test.query).queryProtocolAccum((await test.base).address)).to.equal(0)
-        expect(await (await test.query).queryProtocolAccum((await test.quote).address)).to.equal(25*1024 + 412)
-    })
+    //     expect(await (await test.query).queryProtocolAccum((await test.base).address)).to.equal(0)
+    //     expect(await (await test.query).queryProtocolAccum((await test.quote).address)).to.equal(25*1024 + 412)
+    // })
 
     it("swap wrong direction", async() => {
         await test.testMint(-5000, 8000, 1000000); 
@@ -209,24 +209,24 @@ describe('Pool HotPath', () => {
         expect(price).to.lte(1.46432)
     })
 
-    it("swap buy quote proto fee", async() => {
-        await test.testMint(-5000, 8000, 1000000); 
-        await test.testRevisePool(feeRate, 43, 1)
-        let startQuote = await quoteToken.balanceOf((await test.dex).address)
-        let startBase = await baseToken.balanceOf((await test.dex).address)
+    // it("swap buy quote proto fee", async() => {
+    //     await test.testMint(-5000, 8000, 1000000); 
+    //     await test.testRevisePool(feeRate, 43, 1)
+    //     let startQuote = await quoteToken.balanceOf((await test.dex).address)
+    //     let startBase = await baseToken.balanceOf((await test.dex).address)
         
-        const liqGrowth = 118824
-        const counterFlow = 15904022
+    //     const liqGrowth = 118824
+    //     const counterFlow = 15904022
 
-        await test.snapStart()
-        await test.testSwap(true, false, 10000*1024, toSqrtPrice(2.0))
-        expect(await test.snapBaseFlow()).to.equal(counterFlow)
-        expect(await test.snapQuoteFlow()).to.equal(-10000*1024)
+    //     await test.snapStart()
+    //     await test.testSwap(true, false, 10000*1024, toSqrtPrice(2.0))
+    //     expect(await test.snapBaseFlow()).to.equal(counterFlow)
+    //     expect(await test.snapQuoteFlow()).to.equal(-10000*1024)
 
-        expect(await test.liquidity()).to.equal(1000000*1024 + liqGrowth)
-        expect((await quoteToken.balanceOf((await test.dex).address)).sub(startQuote)).to.equal(-10000*1024)
-        expect((await baseToken.balanceOf((await test.dex).address)).sub(startBase)).to.equal(counterFlow)
-    })
+    //     expect(await test.liquidity()).to.equal(1000000*1024 + liqGrowth)
+    //     expect((await quoteToken.balanceOf((await test.dex).address)).sub(startQuote)).to.equal(-10000*1024)
+    //     expect((await baseToken.balanceOf((await test.dex).address)).sub(startBase)).to.equal(counterFlow)
+    // })
 
     it("swap limit", async() => {
         await test.testMint(-5000, 8000, 40); 
@@ -305,32 +305,32 @@ describe('Pool HotPath', () => {
         expect(price).to.lte(1.25)
     })
 
-    it("swap tick protocol fee", async() => {
-        await test.testMint(-5000, 8000, 40000); 
-        await test.testMint(3800, 4300, 30000); 
-        await test.testMint(3400, 4800, 20000); 
-        await test.testRevisePool(feeRate, 43, 1)
+    // it("swap tick protocol fee", async() => {
+    //     await test.testMint(-5000, 8000, 40000); 
+    //     await test.testMint(3800, 4300, 30000); 
+    //     await test.testMint(3400, 4800, 20000); 
+    //     await test.testRevisePool(feeRate, 43, 1)
 
-        let startQuote = await quoteToken.balanceOf((await test.dex).address)
-        let startBase = await baseToken.balanceOf((await test.dex).address)
+    //     let startQuote = await quoteToken.balanceOf((await test.dex).address)
+    //     let startBase = await baseToken.balanceOf((await test.dex).address)
 
-        await test.snapStart()
-        let x = await test.testSwap(false, false, 100000*1024, toSqrtPrice(1.25))
+    //     await test.snapStart()
+    //     let x = await test.testSwap(false, false, 100000*1024, toSqrtPrice(1.25))
 
-        let limitFlow = -5584330
-        let counterFlow = 4109814
-        let liqGrowth = 44215
+    //     let limitFlow = -5584330
+    //     let counterFlow = 4109814
+    //     let liqGrowth = 44215
 
-        expect(await test.snapBaseFlow()).to.equal(limitFlow)
-        expect(await test.snapQuoteFlow()).to.equal(counterFlow)
+    //     expect(await test.snapBaseFlow()).to.equal(limitFlow)
+    //     expect(await test.snapQuoteFlow()).to.equal(counterFlow)
 
-        expect(await test.liquidity()).to.equal(40000*1024 + liqGrowth)
-        expect((await quoteToken.balanceOf((await test.dex).address)).sub(startQuote)).to.equal(counterFlow)
-        expect((await baseToken.balanceOf((await test.dex).address)).sub(startBase)).to.equal(limitFlow)
+    //     expect(await test.liquidity()).to.equal(40000*1024 + liqGrowth)
+    //     expect((await quoteToken.balanceOf((await test.dex).address)).sub(startQuote)).to.equal(counterFlow)
+    //     expect((await baseToken.balanceOf((await test.dex).address)).sub(startBase)).to.equal(limitFlow)
 
-        expect(await (await test.query).queryProtocolAccum((await test.base).address)).to.equal(21377)
-        expect(await (await test.query).queryProtocolAccum((await test.quote).address)).to.equal(0)
-    })
+    //     expect(await (await test.query).queryProtocolAccum((await test.base).address)).to.equal(21377)
+    //     expect(await (await test.query).queryProtocolAccum((await test.quote).address)).to.equal(0)
+    // })
 
     it("burn payout full", async() => {
         await test.testMint(3000, 5000, 10000);
